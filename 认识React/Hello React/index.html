@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <div id="app2"></div>
+    <!-- React的核心库，与宿主环境无关 -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <!-- 依赖核心库，将核心的功能与页面结合 -->
+    <!-- 核心库的元素会有一个React对象 -->
+    <!-- 其方法有个createElement和原生类似, 不过创建的是一个React对象 -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script>
+        // React原生写法
+        // ReactDom.render(内容, 元素)
+        ReactDOM.render("Hello React", document.querySelector('#app'))
+        // 创建一个img元素
+        const oImg = React.createElement("img", {
+            src: 'http://qiniu.codegorgeous.top/top.png'
+        })
+        // 创建一个h1元素, 并将oImg放入h1中
+        // React.createElement主要用于创建节点
+        // React.createElement(元素类型, 元素属性, 子节点)
+        const oH1 = React.createElement("h1", {}, 'Hello React', oImg)
+        ReactDOM.render(oH1, document.querySelector('#app'))
+    </script>
+     <!-- 编译JSX -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!--  -->
+    <script type="text/babel">
+        // JSX写法 
+        const oH12 = <h1>Hello React <img src="http://qiniu.codegorgeous.top/top.png"/> </h1>
+        ReactDOM.render(oH12, document.querySelector('#app2'))
+    </script>
+</body>
+</html>
