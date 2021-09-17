@@ -14,7 +14,8 @@
         const scene = new THREE.Scene();
         // 创建相机
         // PerspectiveCamera远景相机
-        const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        // 远景相机遵循近大远小的视觉规则
+        const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
         // 创建渲染器
         const renderer = new THREE.WebGLRenderer();
         // 设置渲染大小
@@ -22,7 +23,7 @@
         // 将渲染器创建好的canvas元素插入到body中
         document.body.appendChild(renderer.domElement)
         // 创建一个立方体
-        const geometry = new THREE.BoxGeometry(1, 1, 1)
+        const geometry = new THREE.BoxGeometry(100, 100, 100)
         // 创建材质
         const material = new THREE.MeshBasicMaterial({color: '#abcdef'})
         // 将材质和立方体组合到一起
@@ -31,15 +32,19 @@
         scene.add(cube)
         // 将立方体移动到
         // 将所有创建的东西渲染在页面上
-        camera.position.z = 2
-        // renderer.render(scene, camera)
-
+        camera.position.z = 200
+        // 调整相机观察方向
+        // 右移: 正
+        // 左边: 负
+        // 上移: 正
+        // 下移: 负
+        camera.lookAt(0,100,0)
         // 使图形旋转
         function animate() {
             requestAnimationFrame( animate );
-            cube.rotation.x += 0.01
+            // cube.rotation.x += 0.01
             cube.rotation.y += 0.01
-            cube.rotation.z += 0.01
+            // cube.rotation.z += 0.01
             renderer.render(scene, camera)
         }
         animate()
