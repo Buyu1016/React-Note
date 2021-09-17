@@ -8,6 +8,21 @@ html, body {
     height: 100%;
 }
 
-.student-box {
-    border: 1px solid #A1A1A1;
+#root {}
+
+.sphere {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #abcdef;
+    display: inline-block;
+    position: absolute;
+}
+
+.dir {
+    width: 1px;
+    height: 1px;
+    background: red;
+    opacity: 0.5;
+    position: absolute;
 }
