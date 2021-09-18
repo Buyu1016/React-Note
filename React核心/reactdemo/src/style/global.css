@@ -26,3 +26,20 @@ html, body {
     opacity: 0.5;
     position: absolute;
 }
+
+.item {
+    display: inline-block;
+    text-decoration: none;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.item.disabled {
+    background: #eee;
+    color: #aaa;
+    cursor: not-allowed;
+    /* pointer-events: none; */
+}
