@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { getNumArray } from '../utils/tools'
 
 /**
  * 属性:
@@ -15,7 +16,9 @@ export default class Page extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            current: this.props.current
+            current: this.props.total === 0 ? 0 : this.props.current,
+            rLis: [],
+            range: this.props.range ? this.props.range : 6,
         }
         this.totalPage = Math.ceil(this.props.total/this.props.limit)
         this.handleBackHome = () => {
@@ -37,18 +40,35 @@ export default class Page extends Component {
             this.setState({
                 current: target
             })
-            this.props.onChangePage&&this.props.onChangePage(this.state.current)
+            this.props.onChangePage&&this.props.onChangePage(target)
+            this.renderLis()
         }
+        this.renderLis = () => {
+            setTimeout(() => {
+                const nArr = getNumArray(this.state.current, this.state.range, this.totalPage).map(item => {
+                    return <li
+                        className={this.state.current === item ? 'item active' : 'item'}
+                        key={item}
+                        onClick={(e) => {
+                            this.handleChangePage(+e.target.innerText, this.state.current)
+                        }}
+                    >{item}</li>
+                })
+                this.setState({
+                    rLis: nArr
+                })
+            }, 0)
+        }
+        this.renderLis()
     }
-
     render() {
-        const prev = this.state.current === 1 ? 'item disabled' : 'item'
+        const prev = this.state.current === 1 || this.state.current === 0 ? 'item disabled' : 'item'
         const next = this.state.current === this.totalPage ? 'item disabled' : 'item'
         return (
             <>
                <li className={prev} onClick={this.handleBackHome}>首页</li>
                <li className={prev} onClick={this.handlePrevPage}>上一页</li>
-               <li className='item'>中间</li>
+               {this.state.rLis}
                <li className={next} onClick={this.handleNextPage}>下一页</li>
                <li className={next} onClick={this.handleBackLast}>尾页</li>
                <span>{this.state.current}/{this.totalPage}</span>
