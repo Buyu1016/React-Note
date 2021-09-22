@@ -157,3 +157,82 @@
 # 表单
 
 ## 表单组件默认为非受控组件
+
+# 属性默认值
+
+## 类组件使用 static defaultProps = {}; 函数组件使用构造函数.defaultProps = {};
+
+# 类型检查
+
+## 需使用官方提供的第三方库prop-types
+
+### **prop-types**提供的类型
+
+```
+// 传入undefined/null是无法通过必填选项的
+// 默认情况下，这些都是可选的。
+  optionalArray: PropTypes.array, // 数组
+  optionalBool: PropTypes.bool, // 布尔值
+  optionalFunc: PropTypes.func, // 函数
+  optionalNumber: PropTypes.number, // 数字
+  optionalObject: PropTypes.object, // 对象
+  optionalString: PropTypes.string, // 字符串
+  optionalSymbol: PropTypes.symbol, // symbol
+
+  // 任何东西都可以被渲染:numbers, strings, elements,或者是包含这些类型的数组(或者是片段)。
+  optionalNode: PropTypes.node,
+
+  // 一个 React 元素。
+  optionalElement: PropTypes.element,
+
+  // 你也可以声明一个 prop 是类的一个实例。 
+  // 使用 JS 的 instanceof 运算符。
+  optionalMessage: PropTypes.instanceOf(Message),
+
+  // 你可以声明 prop 是特定的值，类似于枚举
+  optionalEnum: PropTypes.oneOf(['News', 'Photos']),
+
+  // 一个对象可以是多种类型其中之一
+  optionalUnion: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Message)
+  ]),
+
+  // 一个某种类型的数组
+  optionalArrayOf: PropTypes.arrayOf(PropTypes.number),
+
+  // 属性值为某种类型的对象
+  optionalObjectOf: PropTypes.objectOf(PropTypes.number),
+
+  // 一个特定形式的对象
+  optionalObjectWithShape: PropTypes.shape({
+    color: PropTypes.string,
+    fontSize: PropTypes.number
+  }),
+
+  // 你可以使用 `isRequired' 链接上述任何一个，以确保在没有提供 prop 的情况下显示警告。
+  requiredFunc: PropTypes.func.isRequired,
+
+  // 任何数据类型的值
+  requiredAny: PropTypes.any.isRequired,
+
+  // 你也可以声明自定义的验证器。如果验证失败返回 Error 对象。不要使用 `console.warn` 或者 throw ，
+  // 因为这不会在 `oneOfType` 类型的验证器中起作用。
+  customProp: function(props, propName, componentName) {
+    if (!/matchme/.test(props[propName])) {
+      return new Error(
+        'Invalid prop `' + propName + '` supplied to' +
+        ' `' + componentName + '`. Validation failed.'
+      );
+    }
+  }
+```
+
+# HOC 告诫组件
+
+## HOC(Higher-Order Component), 高阶组件, 以组件作为参数, 并返回一个组件
+
+## 通常可以利用HOC实现横切关注点
+
+

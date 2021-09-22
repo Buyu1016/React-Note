@@ -5,4 +5,4 @@ import App from './App'
 
 const oRoot = document.querySelector('#root')
 
-ReactDOM.render(<App />, oRoot)
+ReactDOM.render(<App/>, oRoot)
