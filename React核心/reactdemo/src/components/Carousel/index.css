@@ -1,0 +1,12 @@
+.carousel-container {
+    border: 1px solid red;
+    /* overflow: hidden; */
+    position: relative;
+}
+
+.carousel-list-container{
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: left 1s ease-in-out;
+}
