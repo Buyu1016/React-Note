@@ -1,6 +1,6 @@
 .carousel-container {
     border: 1px solid red;
-    /* overflow: hidden; */
+    overflow: hidden;
     position: relative;
 }
 
@@ -8,5 +8,12 @@
     position: absolute;
     left: 0;
     top: 0;
-    transition: left 1s ease-in-out;
+}
+
+.carousel-dir-container {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%, 0);
 }
