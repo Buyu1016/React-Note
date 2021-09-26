@@ -248,3 +248,160 @@
 ## React.forwardRef()处理函数组件无法使用ref问题
 
 ## 使用方式及其限制: React.forwardRef(函数组件), 函数组件的构造函数会收到第二个参数ref, 用于定义该函数组件内的ref值。此函数只能用于函数组件上
+
+# Context(上下文)
+
+## React < 16.0.0为旧版, React > 16.0.0为新版
+
+## 当某个组件创建了上下文后, 上下文的数据会被子组件所共享。 如果某个组件依赖了上下文，会导致该组件不存粹。 一般用于第三方组件
+
+### 旧版Context接口:
+
+```
+    export default class A extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            uid: '0120129',
+            name: 'CodeGorgeous',
+        }
+    }
+    // 规定上下文数据类型
+    static childContextTypes = {
+        uid: PropTypes.string,
+        name: PropTypes.string
+    }
+    // 设置上下文数据
+    // 该函数自动在render阶段后调用
+    getChildContext() {
+        return {
+            uid: this.state.uid,
+            name: this.state.name
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                组件A
+                <B />
+            </div>
+        )
+    }
+
+    // ******
+    export default class C extends Component {
+    constructor(props, context) {
+        super(props)
+        this.state = {}
+        console.log(context) // {uid: '0120129', name: 'CodeGorgeous'}
+    }
+    // 必须重新明确上下文数据类型
+    static contextTypes = {
+        uid: PropTypes.string,
+        name: PropTypes.string
+    }
+
+    render() {
+        return (
+            <div>
+                组件C
+                <h1>{this.context.uid}</h1>
+                <h2>{this.context.name}</h2>
+            </div>
+        )
+    }
+}
+}
+```
+
+## 新版Context接口:
+
+### 新版本的Context将独立组件外, 多文件组件模式需要把context抽离出来, 不需要在声明类型
+
+```
+    // ***context.js***
+
+    import React from 'react';
+
+    const context = React.createContext({
+        name: 'CodeGorgeous',
+        sex: 'male',
+        age: 21
+    })
+    export default context
+
+    // ***A.jsx***
+
+    import React, { Component } from 'react'
+    import B from './B'
+    import context from './context'
+
+    // 通过context创建, React.createContext参数为数据默认值
+    // 多文件需要把这个提取出来为一个文件
+    // const context = React.createContext({
+    //     name: 'CodeGorgeous',
+    //     sex: 'male',
+    //     age: 21
+    // })
+
+    export default class A extends Component {
+        render() {
+            const Provider = context.Provider
+            return (
+                <div>
+                    {/* 通过设置value来设置上下文 */}
+                    <Provider value={{
+                        name: 'maomao',
+                        sex: 'female',
+                        age: 18
+                    }}>
+                        组件A
+                        <B />
+                    </Provider>
+                </div>
+            )
+        }
+    }
+
+    // ***B.jsx***
+
+    import React, { Component } from 'react'
+    import C from './C'
+
+    export default class B extends Component {
+        render() {
+            return (
+                <div>
+                    组件B
+                    <C />
+                </div>
+            )
+        }
+    }
+
+    // ***C.jsx***
+
+    import React, { Component } from 'react'
+    import context from './context'
+
+    export default class C extends Component {
+
+        // 需要把上下文拿到, react内部把上下文放入该组件内
+        static contextType = context
+
+        render() {
+            return (
+                <div>
+                    组件C
+                    <h1>{this.context.name}</h1>
+                    <h1>{this.context.sex}</h1>
+                    <h1>{this.context.age}</h1>
+                </div>
+            )
+        }
+    }
+
+```
+
+### 只有类组件才可以创建上下文, 一个组件/其子组件声明多个上下文, 遇到相同的属性会产生覆盖效果(类型一致), 如果中途覆盖并改变其设定类型, 则其子组件在使用时会接收到改变后的类型的数据
