@@ -329,6 +329,14 @@
         sex: 'male',
         age: 21
     })
+
+    /**
+    * context有两个属性:
+    *  Provider: 生产者, 是一个组件, 用于创建上下文, 其有value属性用于设置上下文数据
+    *  Consumer: 消费者, 是一个组件, 用于获取上下文数据的一种方式, 通常在函数组件内使用该种方式获取上下文数据(类组件内也可以使用)
+    *  要求使用Consumer这种方式获取上下文数据
+    */
+
     export default context
 
     // ***A.jsx***
@@ -368,14 +376,27 @@
 
     import React, { Component } from 'react'
     import C from './C'
+    import context from './context'
 
     export default class B extends Component {
         render() {
+            const Consumer = context.Consumer
             return (
-                <div>
-                    组件B
-                    <C />
-                </div>
+                <Consumer>
+                    {value => {
+                        return (
+                            <>
+                                <div>
+                                    组件B
+                                    <h1>{value.name}</h1>
+                                    <h1>{value.sex}</h1>
+                                    <h1>{value.age}</h1>
+                                    <C />
+                                </div>
+                            </>
+                        )
+                    }}
+                </Consumer>
             )
         }
     }
@@ -401,7 +422,36 @@
             )
         }
     }
+    
+    // ******函数组件******
+
+    import React from 'react';
+    import context from './context';
+
+    export default function D(props) {
+        const Consumer = context.Consumer
+        return (
+            <div>
+                组件D
+                {/* 在函数组件内得到上下文需要使用context.Consumer */}
+                <Consumer>
+                    {value => {
+                        return (
+                            <>
+                                <h1>{value.name}</h1>
+                                <h1>{value.sex}</h1>
+                                <h1>{value.age}</h1>
+                            </>
+                        )
+                    }}
+                </Consumer>
+            </div>
+        )
+    }
+
 
 ```
 
-### 只有类组件才可以创建上下文, 一个组件/其子组件声明多个上下文, 遇到相同的属性会产生覆盖效果(类型一致), 如果中途覆盖并改变其设定类型, 则其子组件在使用时会接收到改变后的类型的数据
+### 只有类组件才可以创建上下文(旧版本中), 一个组件/其子组件声明多个上下文, 遇到相同的属性会产生覆盖效果(类型一致), 如果中途覆盖并改变其设定类型, 则其子组件在使用时会接收到改变后的类型的数据
+
+### 当上下文发生变化时会影响到其所有子元素, 强制所有子元素更新, 并且无视shouldComponentUpdate阶段所做的优化

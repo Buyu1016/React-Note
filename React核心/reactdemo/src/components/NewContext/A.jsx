@@ -11,6 +11,12 @@ import context from './context'
 // })
 
 export default class A extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            age: 18
+        }
+    }
     render() {
         const Provider = context.Provider
         return (
@@ -19,9 +25,16 @@ export default class A extends Component {
                 <Provider value={{
                     name: 'maomao',
                     sex: 'female',
-                    age: 18
+                    age: this.state.age
                 }}>
                     组件A
+                    <button onClick={() => {
+                        this.setState(cur => {
+                            return {
+                                age: cur.age + 1
+                            }
+                        })
+                    }}>Change</button>
                     <B />
                 </Provider>
             </div>

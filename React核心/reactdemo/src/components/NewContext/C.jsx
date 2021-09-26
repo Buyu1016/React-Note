@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import context from './context'
+import D from './D'
 
 export default class C extends Component {
 
@@ -7,12 +8,15 @@ export default class C extends Component {
     static contextType = context
 
     render() {
+        console.log('C的render阶段执行')
+        console.log(this.context)
         return (
             <div>
                 组件C
                 <h1>{this.context.name}</h1>
                 <h1>{this.context.sex}</h1>
                 <h1>{this.context.age}</h1>
+                <D />
             </div>
         )
     }
