@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import A from './components/NewContext/A'
 
 export default class App extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class App extends Component {
         return (
             <div>
                 组件App
+                <A />
             </div>
         )
     }
