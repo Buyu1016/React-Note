@@ -470,4 +470,82 @@
 
 # render props
 
-## 
+## 算是一种思维模式(横切关注点(HOC高阶组件也是这种思想)), 某个组件需要某个属性, 该属性通用性高, 则把该属性单独做一个组件, 使用的组件外层嵌套该组件并传值进入组件即可, 可以理解这种专门提供数据的组件称之为纯组件
+
+# Portals
+
+## 插槽: 将一个React元素渲染到执行的容器内, 由ReactDOM所提供
+
+## 注意即使改变了某个React的元素的容器, 可当React元素代码中放置的位置仍受到原来位置的事件冒泡所影响
+
+# 错误边界
+
+## 默认情况下, 若一个组件render阶段发生错误, 会导致整个组件树全部被卸载
+
+### 错误边界就是一个组件, 专门用于捕获错误, 错误边界此概念于16.0.0版本后提出的
+
+### 仅在子组件发生错误时会触发, 自身组件发生变化时发生错误是无法捕获到的, 异步错误也无法捕获到, 事件所发生的错误也无法捕获到
+
+### 写法
+
+```js
+    // 写法一(推荐)
+    // 增加一个生命周期getDerivedStateFromError, 此阶段运行在渲染子组件的过程中, 发生错误之后, 更新页面之前
+    class ErrorBoundary extends PureComponent {
+
+        state = {
+            ifError: false
+        }
+
+        // 此方法仅在子组件发生错误时会触发, 自身组件发生变化时发生错误是无法捕获到的
+        static getDerivedStateFromError(error) {
+            console.log('错误发生', error)
+            // 返回一个对象, 该对象会覆盖掉原来的state
+            return {
+                ifError: true
+            }
+        }
+        render() {
+            if (this.state.ifError) {
+                return (
+                    <>组件发生错误</>
+                )
+            } else {
+                return (
+                    <>{this.props.children}</>
+                )
+            }
+        }
+    }
+
+    // 写法二(不推荐)
+    // 编写生命周期componentDidCatch, 此阶段运行在渲染子组件的过程中, 发生错误, 更新页面之后
+    class ErrorBoundary extends PureComponent {
+
+        state = {
+            ifError: false
+        }
+
+        componentDidCatch(error, info) {
+            console.log('发生错误', error, info)
+            this.setState(cur => {
+                return {
+                    ifError: true
+                }
+            })
+        }
+
+        render() {
+            if (this.state.ifError) {
+                return (
+                    <>组件发生错误</>
+                )
+            } else {
+                return (
+                    <>{this.props.children}</>
+                )
+            }
+        }
+    }
+
+```
