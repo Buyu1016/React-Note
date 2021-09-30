@@ -549,3 +549,81 @@
     }
 
 ```
+
+# React中的事件(**没听懂**)
+
+## React中的事件是注册在document上的, 事件处理也基本上在document上处理
+
+### 如果给真实的DOM注册事件并阻止了事件冒泡, 则响应的react事件是无法被触发的
+
+### React的事件所给的event是经过react包装过的, 如果需要使用原生的event则通过e.nativeEvent得到
+
+# 渲染原理
+
+## React元素(React Element): 通过React.createElement语法创建, JSX是这种方法的一种语法糖
+
+```js
+    // 例如:
+    <div>Hello World</div>
+    <App />
+    // 这些都是React元素
+```
+
+## React节点: 专门用于渲染到UI界面的对象, React节点是React元素的进一步转变, 最终ReactDOM一定是通过React节点来渲染也页面
+
+- 节点类型
+    - React DOM节点: 创建该节点的React元素的type为一个字符串
+    - React 组件节点: 创建该节点的React元素的type是一个函数或者类
+    - React TextNode节点: 创建该节点是由字符串所创建
+    - React 空节点: 由null, undefined, false所创建
+    - React 数组节点: 由数组所创建的节点
+
+### React元素最终会变为React节点, 但是React节点不一定是由React元素所创建
+
+## 首次渲染
+
+- 通过参数创建节点
+- 根据不同的节点类型执行不同的事情
+    - React DOM节点: 通过document.createElement创建真实DOM, 然后设置该DOM的属性, 遍历对应的React元素的children属性, 重复递归执行最开始的的步骤, 直到遍历完成
+    - React TextNode节点: 通过document.createTextNode创建真实的文本DOM
+    - React 空节点: 什么都不做
+    - React 数组节点: 遍历数组, 重复递归执行最开始的的步骤, 直到遍历完成
+    - React 组件节点:
+        - 函数组件: 必须返回一个可以生成节点的内容, 并进行递归执行最开始的的步骤, 直至结束
+        - 类组件: 
+            - 创建该类实例
+            - 调用生命周期方法 static getDeriveStateFromProps
+            - 运行render拿到可以生成节点的内容
+            - 递归执行最开始的的步骤, 直至结束
+            - componentDidMounted阶段执行完毕的时机是该组件内部的Dom/组件都已经生成完毕
+- 生成虚拟DOM树之后会将该树保存, 以便之后使用
+- 会将创建好的DOM一起加入到页面上, 不是一个个加入
+```js
+    // 分析下段代码写出其结构:
+    const a = '1'
+
+    const app = (
+        <div>
+            <h1>
+                组件App
+                {['CodeGorgeous', null, <p>芜湖</p>]}
+            </h1>
+            <p>{undefined}</p>
+            <p>a: {a}</p>
+        </div>
+    )
+    // 对应的结构称之为虚拟DOM树
+    |- div
+        |- h1
+            |- '组件App'
+            |- ['CodeGorgeous', null, <p>芜湖</p>]
+                |- 'CodeGorgeous'
+                |- null
+                |- p
+                    |- '芜湖'
+        |- p
+            |- undefined
+        |- p
+            |- 'a:'
+            |- '1'
+```
