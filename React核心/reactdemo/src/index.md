@@ -673,8 +673,96 @@
 
 # 工具
 
-## StrictMode组件, 该组件本身不进行UI渲染, 和React.Fragment(可简写为<></>)类似, 该组件会在渲染时发现不合适的代码会进行及时的警告, 例如: 使用过期的生命周期/使用过期的API/有副作用
+## StrictMode组件, 该组件本身不进行UI渲染, 和React.Fragment(可简写为<></>)类似, 该组件会在渲染时发现不合适的代码会进行及时的警告, 例如: 使用过期的生命周期/使用过期的API/有副作用(**副作用只能写在componentDidMount/componentDidUpdate/componentWillMount阶段**)
 
 ## Profiler
 
 ### 性能分析工具, 能够检测出组件加载花费时间, 是浏览器插件React Developer Tools所提供的
+
+# Hook
+
+## Hook出现在React16.8.0后, 专门用于增强函数组件的功能(类组件中无法使用), 使函数组件能够做到类组件做到的事情, Hook本质就是一个函数, 该函数可以挂载任何功能
+
+## State Hook
+
+### 用于在函数组件中使用状态, 可以设置多个状态
+
+```js
+    import React, { useState } from 'react'
+
+    export default function UseStateDemo(props) {
+        // 会返回一个数组, 数组[0]存储的是数据, 数组[1]存储的是函数, 函数用于改变值
+        const arr = useState(18)
+        // 简便写法, 配合es6的解构语法
+        // const [age, setAge] = useState(18)
+
+        const [ifDisplay, setIfDisplay] = useState(true)
+
+        return (
+            <div>
+                组件UseStateDemo
+                <h1>
+                    <button onClick={() => {
+                        arr[1](arr[0] - 1)
+                    }}>-</button>
+                    {arr[0]}
+                    <button onClick={() => {
+                        arr[1](arr[0] + 1)
+                    }}>+</button>
+                </h1>
+                <button onClick={() => {
+                    setIfDisplay(!ifDisplay)
+                }}>切换状态</button>
+            </div>
+        )
+    }
+```
+
+### State Hook使用注意事项
+
+- 严禁在判断/循环中出现useState
+- 如果使用函数改变State, 并改变前后的值完全相等(Object.is), 则不会重新渲染
+- 使用函数改变State, 传入的值是不会和原来的进行合并, 而是覆盖
+- 设置State也可能会是异步, 不能信任设置之后的值, 应该使用函数作为重新设置State的第一项参数
+
+# 强制刷新
+
+- 类组件中使用this.forceUpdate()
+- 函数组件中创建一个没用的State, 值为空对象{}, 每次强制刷新进行对State的重新赋值
+
+## Effect Hook
+
+### 用于在函数组件中处理副作用
+
+```js
+    import React, { useEffect, useState } from 'react'
+
+    export default function EffectHookDemo() {
+        console.log('渲染')
+        const [num, setNum] = useState(0)
+        // useEffect的第一个参数为函数, 用于写副作用, 第二个参数为数组, 称之为依赖项, 可比较副作用依赖数据的变化, 如果依赖项数据变化则执行副作用函数, 否则不执行
+        useEffect(() => {
+            console.log('副作用')
+            document.title = num
+            // 可以返回一个函数, 返回函数运行时间点是渲染之后, 副作用函数调用之前, 组件销毁前也会调用这个返回函数
+            return () => {console.log('清理')}
+        }, [])
+
+        return (
+            <div>
+                {num}
+                <button onClick={() => {
+                    setNum(cur => cur + 1);
+                }}>+</button>
+            </div>
+        )
+    }
+```
+
+### Effect Hook使用注意事项
+
+- 严禁在循环/判断中使用 
+
+# 副作用
+
+## ajax请求/计时器/异步操作/更改真实DOM/本地存储/会对外部产生影响的操作

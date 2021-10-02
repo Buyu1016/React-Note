@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import EffectHookDemo from './components/DemoSix/EffectHookDemo'
+import UseStateDemo from './components/DemoSix/UseStateDemo'
 
 export default class App extends PureComponent {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class App extends PureComponent {
             <div>
                 <h1>
                     组件App
-                    <EffectHookDemo />
+                    <UseStateDemo />
                 </h1>
             </div>
         )

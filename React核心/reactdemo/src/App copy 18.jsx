@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react'
-import EffectHookDemo from './components/DemoSix/EffectHookDemo'
 
 export default class App extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {}
+        setTimeout(() => {
+            console.log('Hello')
+        }, 1000);
     }
 
     render() {
@@ -12,7 +14,6 @@ export default class App extends PureComponent {
             <div>
                 <h1>
                     组件App
-                    <EffectHookDemo />
                 </h1>
             </div>
         )
