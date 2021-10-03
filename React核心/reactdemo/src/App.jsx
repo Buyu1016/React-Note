@@ -1,20 +1,11 @@
-import React, { PureComponent } from 'react'
-import EffectHookDemo from './components/DemoSix/EffectHookDemo'
+import React from 'react'
 
-export default class App extends PureComponent {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
 
-    render() {
-        return (
-            <div>
-                <h1>
-                    组件App
-                    <EffectHookDemo />
-                </h1>
-            </div>
-        )
-    }
+export default function App(props) {
+
+    return (
+        <div>
+            组件App
+        </div>
+    )
 }

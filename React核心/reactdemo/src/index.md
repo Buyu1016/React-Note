@@ -766,3 +766,49 @@
 # 副作用
 
 ## ajax请求/计时器/异步操作/更改真实DOM/本地存储/会对外部产生影响的操作
+
+## 自定义Hook
+
+### 将一些常用的Hook功能进行抽离, 形成一个函数, 该函数就称之为自定义Hook
+
+- 自定义Hook规则
+    - 函数名必须以use开头
+    - 调用自定义Hook函数时,应该放到顶层
+
+## Reducer Hook
+
+### 将一些数据进行单独抽离, 外部是不能直接操作其数据,只能通过其提供的函数进行数据改变操作
+
+```js
+    import { useState } from 'react'
+
+    /**
+     * 数据管理
+     * @param { any } initial 数据初始值
+     * @param { Function } reducer 数据操作函数
+     * @returns { Object }
+     */
+    export function useReducer(reducer, initial, initFun) {
+        const [n, setN] = useState(initFun ? initFun(initial) : initial)
+        function dispatch(action) {
+            const newN = reducer(n, action)
+            console.log(`日志记录: 操作类型: ${action}, 数据变化:${n}->${newN}`)
+            setN(newN)
+        }
+        return [n, dispatch]
+    }
+```
+
+## Context Hook
+
+## Callback Hook
+
+## Memo Hook
+
+## Ref Hook
+
+## ImperativeHandle Hook
+
+## LayoutEffect Hook
+
+## DebugValue Hook
