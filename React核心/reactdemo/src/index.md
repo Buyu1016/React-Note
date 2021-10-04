@@ -801,14 +801,304 @@
 
 ## Context Hook
 
+### 用于获取上下文数据, 能够更加方便快速的获取上下文数据并且不用嵌套Consumer组件(**再次注意: Hook仅能在函数组件内使用**), 能够更加保持组件树的纯净
+
+```js
+    // ******context.js******
+    import React from 'react';
+
+    const context = React.createContext()
+
+    export default context
+    // ******A.jsx******
+    import React from 'react'
+    import context from './context'
+    import B from './B'
+
+    export default function A() {
+        return (
+            <div>
+                <context.Provider value={{
+                    name: 'maomao',
+                    age: 15
+                }}>
+                    Hello A
+                    <B />
+                </context.Provider>
+            </div>
+        )
+    }
+
+    // ******B.jsx******
+    import React, { useContext } from 'react'
+    import context from './context'
+
+    export default function B() {
+        const confidante = useContext(context)
+        console.log(confidante)
+        // 旧版本写法:
+        // return (
+        //     <context.Consumer>
+        //         {(value) => {
+        //             return (
+        //                 <>
+        //                     <h1>name: {value.name}</h1>
+        //                     <h1>age: {value.age}</h1>
+        //                 </>
+        //             )
+        //         }}
+        //     </context.Consumer>
+        // )
+
+        // 使用useContext之后的写法
+        return (
+            <>
+                <h1>name: {confidante.name}</h1>
+                <h1>age: {confidante.age}</h1>
+            </>
+        )
+    }
+```
+
 ## Callback Hook
+
+### 用于得到一个固定引用值的函数
+
+```js
+    import React, { PureComponent, useState, useCallback } from 'react'
+
+    export default function App(props) {
+        console.log('App运行了')
+        const [num, setNum] = useState(0)
+        const [val, setVal] = useState(0)
+
+        const onAClick = useCallback(() => {
+            setNum(num + 1)
+        }, [num])
+        
+        return (
+            <div>
+                组件App
+                {/* 正常情况下下面的input改变了并不会使得A组件重新渲染, 
+                    但是由于onClick的函数每次都是一个新的地址, 造成了A每次都会运行
+                    使用useCallback进行对函数的
+                        useCallback(fn, [])
+                            fn: 固定引用的函数
+                            []: 函数所依赖的数据, 如果依赖的数据发生变化则产生新的函数地址
+                */}
+                {/* <A value={num} onClick={() => {
+                    setNum(num + 1)
+                }}/> */}
+                <A value={num} onClick={onAClick}/>
+                <input
+                    type="number"
+                    value={val}
+                    onChange={(e) => {
+                        setVal(e.target.value)
+                    }}
+                />
+            </div>
+        )
+    }
+
+    class A extends PureComponent {
+        render() {
+            console.log('A运行了')
+            return (
+                <div>
+                {this.props.value}
+                <button
+                    onClick={() => {
+                    this. props.onClick && this.props.onClick()
+                    }}
+                >改变</button>
+            </div>
+            )
+        }
+    }
+```
 
 ## Memo Hook
 
+### 用于保存一些需要经过复杂计算的数据, 能够进行效率优化
+
+```js
+    import React, { PureComponent, useState, useMemo } from 'react'
+
+    export default function App(props) {
+        console.log('App运行了')
+        const [num, setNum] = useState(0)
+        const [val, setVal] = useState(0)
+
+        const onAClick = useMemo(() => {
+                return () => (setNum(num + 1))
+        }, [num])
+        
+        return (
+            <div>
+                组件App
+                {/* 正常情况下下面的input改变了并不会使得A组件重新渲染, 
+                    但是由于onClick的函数每次都是一个新的地址, 造成了A每次都会运行
+                    useMemo(fn, [])
+                        fn: 运行函数, 函数返回值会作为useMemo的最终返回值
+                        []: 函数所依赖的数据, 如果依赖的数据发生变化则产生新的函数地址
+                    useMemo和useCallback的区别在于: useMemo需要返回一个你所需要的数据/函数, 而useCallback则是直接运行函数
+                */}
+                {/* <A value={num} onClick={() => {
+                    setNum(num + 1)
+                }}/> */}
+                <A value={num} onClick={onAClick}/>
+                <input
+                    type="number"
+                    value={val}
+                    onChange={(e) => {
+                        setVal(e.target.value)
+                    }}
+                />
+            </div>
+        )
+    }
+
+    class A extends PureComponent {
+        render() {
+            console.log('A运行了')
+            return (
+                <div>
+                {this.props.value}
+                <button
+                    onClick={() => {
+                    this. props.onClick && this.props.onClick()
+                    }}
+                >改变</button>
+            </div>
+            )
+        }
+    }
+```
+
+### **useMemo和useCallback的区别:** useMemo需要返回一个你所需要的数据/函数, 而useCallback则是直接运行函数, 通常useCallback能做到的useMemo是都能够做到的
+
 ## Ref Hook
+
+### 用于设置ref标记元素, 使用方式和createRef()基本一致, 也能用于保存一些组件特有值(**特有值是指运行函数并不会产生新地址而是继续沿用旧地址**)
+
+```js
+    // ***例子一: 保存Dom
+    import React, { useRef } from 'react'
+
+    export default function App() {
+        const inputRef = useRef()
+        
+        return (
+            <div>
+                <input ref={inputRef} type="text" />            
+                <button
+                    onClick={() => {
+                        console.log(inputRef.current.value)
+                    }}
+                >输出</button>
+            </div>
+        )
+    }
+
+    // 例子二: 保存一些特有值
+    import React, { useRef, useState, useEffect } from 'react'
+
+    export default function App() {
+        const [h, setH]  = useState(0)
+        const [m, setM]  = useState(0)
+        const [n, setN] = useState(0)
+        
+        const timer = useRef()
+        useEffect(() => {
+            if (n === 60) {
+                setN(0)
+                setM(m + 1)
+            }
+            if (n === 60) {
+                setM(0)
+                setH(h + 1)
+            }
+            
+            timer.current = setTimeout(() => {
+                setN(n + 1)
+            }, 1000)
+            return (() => {
+                clearTimeout(timer.current)
+            })
+        }, [n])
+        return (
+            <div>
+                <h1>{h}:{m}:{n}</h1>
+            </div>
+        )
+    }
+```
 
 ## ImperativeHandle Hook
 
+### 用于调用一些函数组件内的一些方法
+
+```js
+    import React, { useRef, useImperativeHandle } from 'react'
+
+    const NewA = React.forwardRef(A)
+
+    export default function App() {
+        const newARef = useRef()
+
+        return (
+            <div>
+                <NewA ref={newARef}/>
+                <button
+                    onClick={() => {
+                        console.log(newARef, newARef.current)
+                    }}
+                >Print</button>
+            </div>
+        )
+    }
+
+    function A(props, ref) {
+        // 第一个参数为填写ref
+        // 第二个值为函数,返回值会作为ref.current存储
+        // 第三个参数为[], 是依赖项
+        useImperativeHandle(ref, () => {
+            return 'Hello A'
+        })
+        return (
+            <div>
+                Hello A
+            </div>
+        )
+    }
+```
+
 ## LayoutEffect Hook
 
+### 用法和useEffect一致, 只不过运行时间点不同, LayoutEffect运行在页面渲染前(会阻塞程序), Effect运行在页面渲染后,推荐尽量使用Effect(不会阻塞程序)
+
 ## DebugValue Hook
+
+### 用于调试, 可对自定义Hook在浏览器React插件中看到自定义Hook的自定义描述信息, 如果创建了一个通用性比较高的Hook可以使用useDebugValue(**对于自己的规定: 自定义Hook必须写useDebugValue**)
+
+```js
+    import React, { useState, useEffect, useDebugValue } from 'react'
+
+    export default function App() {
+        const [my, setMy] = useState('CodeGorgeous')
+        useEffect(() => {},[])
+        useTest()
+        return (
+            <div>
+                
+            </div>
+        )
+    }
+
+    function useTest() {
+        const [name, setName] = useState('maomao')
+        const [age, setAge] = useState(15)
+        useDebugValue('MyConfidante')
+}
+```

@@ -1,11 +1,10 @@
 import React from 'react'
 
-
-export default function App(props) {
-
+export default function App() {
+    
     return (
         <div>
-            组件App
+            
         </div>
     )
 }
