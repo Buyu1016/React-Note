@@ -1102,3 +1102,12 @@
         useDebugValue('MyConfidante')
 }
 ```
+
+# React动画
+
+## React动画库: react-transition-group
+
+- 动画组件
+    - Transition **基础**
+    - CSSTransition **常用**
+    - SwitchTransition **用于做两者切换**
