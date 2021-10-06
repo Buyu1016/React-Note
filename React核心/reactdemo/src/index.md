@@ -1111,3 +1111,145 @@
     - Transition **基础**
     - CSSTransition **常用**
     - SwitchTransition **用于做两者切换**
+    - TransitionGroup **用于管理列表动画**
+
+# Router
+
+## react-router: 路由核心库
+
+## react-router-dom: 利用路由核心库, 结合实际页面
+
+## 路由的两种模式
+
+### Hash Router 哈希路由
+
+#### 根据url中的锚点(哈希)确定组件, 兼容性好
+
+### Browser History Router 浏览器历史记录路由
+
+#### history添砖具有不会刷新页面的特点
+
+## Router组件
+
+### 提供路由模式配置, 会产生一个上下文
+
+- 路由模式
+    - HashRouter
+    - BrowserRouter
+
+## Route组件
+
+### 用于设置路由的关键组件
+
+- Route属性
+    - path  匹配路径(不会区分路径的大小写)
+    - component 匹配成功后的应显示的组件
+    - sensitive 用于区分路径大小写, 默认为false不区分大小写
+    - exact 精确匹配路径
+    - children 会忽略使用component传递的组件, 渲染children的内容
+
+```js
+    import React from 'react'
+    import { HashRouter, BrowserRouter, Route } from 'react-router-dom'
+
+    export default function App() {
+
+        return (
+            <BrowserRouter>
+                Hello World
+                <Route path={"/"} component={C}/>
+                <Route path={"/view/a"} component={A}/>
+                <Route path={"/view/b"} component={B}/>
+            </BrowserRouter>
+        );
+    }
+
+    // /view/a
+    function A() {
+        return (
+            <div>
+            Hello A
+            </div>
+        )
+    }
+
+    // /view/b
+    function B() {
+        return (
+            <div>
+            Hello B
+            </div>
+        )
+    }
+
+    // /
+    function C() {
+        return (
+            <div>
+            Hello C
+            </div>
+        )
+    }
+```
+
+## Switch组件
+
+### 写在Switch中的Route组件, 当匹配到第一个符合的组件后就不会再向后寻找匹配的组件, **Switch子元素只能使用Route组件**
+
+```js
+    import React from 'react'
+    import { HashRouter, BrowserRouter, Route, Switch } from 'react-router-dom'
+
+    export default function App() {
+
+        return (
+        <BrowserRouter>
+            Hello World
+            <Switch>
+            <Route path={"/"} exact component={C}>
+                <h1>毛毛永远的好闺蜜</h1>
+            </Route>
+            <Route path={"/a"} exact component={A}/>
+            <Route path={"/a/b"} exact component={B}/>
+            <Route component={NotFound}/>
+            </Switch>
+        </BrowserRouter>
+        );
+    }
+
+    // /view/a
+    function A() {
+        return (
+            <div>
+            Hello A
+            </div>
+        )
+    }
+
+    // /view/b
+    function B() {
+        return (
+            <div>
+            Hello B
+            </div>
+        )
+    }
+
+    // /
+    function C() {
+        return (
+            <div>
+            Hello C
+            </div>
+        )
+    }
+
+    function NotFound() {
+        return (
+            <div>
+            <h1>404 NotFound</h1>
+            <h2>您查找的页面不存在</h2>
+            </div>
+        )
+    }
+```
