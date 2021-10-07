@@ -1253,3 +1253,74 @@
         )
     }
 ```
+
+## 关于Route向组件内注入的属性信息
+
+- Props:
+    - history:
+        - props.history.push(url, meta)
+            - 进行跳转页面
+            - 无法跳转到其他网站, 只能更改域名后的路径
+            - meta参数可以携带数据
+        - props.history.replace()
+            - 和push基本类似
+    - location:
+        - 保存着push跳转时携带的meta信息
+    - match:
+        - 保存的路由匹配的先骨干信息
+        - isExact为true表示当前路径是否与路由配置路径精确匹配
+
+### 为什么不直接使用history对象?
+
+#### window.history只能支持一种路由模式, 使用window.history.pushState方法时, 是收不到通知的, 会导致无法渲染相对应的组件
+
+### 怎么向非路由组件内使用history等属性?
+
+#### 使用react-router提供的高阶组件withRouter包装组件
+
+```js
+    import React from 'react'
+    import { BrowserRouter, Route } from 'react-router-dom'
+
+    export default function App() {
+
+        return (
+        <BrowserRouter>
+            <Route path={'/'} exact component={A}/>
+            {/* path可以使用:用于表示变量, 使用模糊匹配 */}
+            {/* ?表示该值可有可无 */}
+            {/* *表示任意字符 */}
+            <Route path={'/b/:data?/*'} exact component={B}/>
+        </BrowserRouter>
+        );
+    }
+
+    function A(props) {
+        return (
+            <>
+            Hello A
+            <button
+                onClick={() => {
+                props.history.push('/b/a', {
+                    name: 'CodeGorgeous'
+                })
+                }}
+            >{'->'} B</button>
+            </>
+        )
+    }
+
+    function B(props) {
+        console.log(props.history.location, props)
+        return (
+            <>
+            Hello B
+            <button
+                onClick={() => {
+                props.history.push('/')
+                }}
+            >{'-> A'}</button>
+            </>
+        )
+    }
+```

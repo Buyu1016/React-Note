@@ -36,3 +36,27 @@ export async function getAllStudent() {
         method: 'GET'
     }).then(resp => resp.json())
 }
+
+/**
+ * 关键词查找学生
+ * @param {*} sex 性别 -1 全部 0 男 1 女
+ * @param {*} search 搜索关键字
+ * @param {*} page 页数
+ * @param {*} size 页容量
+ * @returns 
+ */
+export async function getStudent(sex = -1, search = "", page = 1, size = 5) {
+    if (search) {
+        const result = await fetch(`${domain}/api/student/searchStudent?appkey=${appkey}&sex=${sex}&search=${search}&page=${page}&size=${size}`, {
+            method: 'GET'
+        }).then(resp => resp.json())
+        result.data.datas = result.data.searchList
+        delete result.data.searchList
+        return result
+    } else {
+        const result = await getFindByPage(page, size)
+        result.data.datas = result.data.findByPage
+        delete result.data.findByPage
+        return result
+    }
+}

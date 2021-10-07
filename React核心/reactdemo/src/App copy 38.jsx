@@ -15,7 +15,7 @@ export default function App() {
           <Route path={"/"}>
             <StudentLayout
               header={<Header />}
-              side={Side}
+              side={<Side />}
               main={<Main />}
             ></StudentLayout>
           </Route>

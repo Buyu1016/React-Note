@@ -1,0 +1,15 @@
+.side-container {
+    padding-top: 20px;
+}
+
+.side-container li {
+    text-align: center;
+    font-size: 20px;
+    padding: 5px;
+    background: #aaa;
+    list-style: none;
+    border-radius: 10px 0 0 10px;
+    margin: 4px 0 4px 50px;
+    color: #fff;
+    cursor: pointer;
+}

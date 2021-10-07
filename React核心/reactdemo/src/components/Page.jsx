@@ -20,6 +20,7 @@ export default class Page extends Component {
             rLis: [],
             range: this.props.range ? this.props.range : 6,
         }
+        console.log(props)
         this.totalPage = Math.ceil(this.props.total/this.props.limit)
         this.handleBackHome = () => {
             this.handleChangePage(1, this.state.current)

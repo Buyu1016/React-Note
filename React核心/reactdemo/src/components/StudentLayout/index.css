@@ -1,0 +1,30 @@
+.student-layout-container {
+    width: 100vw;
+    height: 100vh;
+    /* overflow: hidden; */
+}
+
+.student-layout-container .header {
+    width: 100vw;
+    height: 50px;
+    background: rgba(63, 58, 58, 0.5);
+}
+
+.student-layout-container .box-container {
+    display: flex;
+}
+
+.student-layout-container .side {
+    width: 260px;
+    height: calc(100vh - 50px);
+    background: #abcdef;
+    display: inline-block;
+}
+
+.student-layout-container .main {
+    width: calc(100vw - 260px);
+    height: calc(100vh - 50px);
+    display: inline-block;
+    padding: 20px 10px 0 10px;
+    box-sizing: border-box;
+}
