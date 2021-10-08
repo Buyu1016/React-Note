@@ -19,9 +19,8 @@ export default class Page extends Component {
             current: this.props.total === 0 ? 0 : this.props.current,
             rLis: [],
             range: this.props.range ? this.props.range : 6,
+            totalPage: Math.ceil(this.props.total/this.props.limit)
         }
-        console.log(props)
-        this.totalPage = Math.ceil(this.props.total/this.props.limit)
         this.handleBackHome = () => {
             this.handleChangePage(1, this.state.current)
         }
@@ -32,11 +31,11 @@ export default class Page extends Component {
             this.handleChangePage(this.state.current + 1, this.state.current)
         }
         this.handleBackLast = () => {
-            this.handleChangePage(this.totalPage, this.state.current)
+            this.handleChangePage(this.state.totalPage, this.state.current)
         }
         this.handleChangePage = (target, current) => {
             if (target < 1) target = 1
-            if (target > this.totalPage) target = this.totalPage
+            if (target > this.state.totalPage) target = this.state.totalPage
             if (current === target) return
             this.setState({
                 current: target
@@ -46,7 +45,7 @@ export default class Page extends Component {
         }
         this.renderLis = () => {
             setTimeout(() => {
-                const nArr = getNumArray(this.state.current, this.state.range, this.totalPage).map(item => {
+                const nArr = getNumArray(this.state.current, this.state.range, this.state.totalPage).map(item => {
                     return <li
                         className={this.state.current === item ? 'item active' : 'item'}
                         key={item}
@@ -63,8 +62,9 @@ export default class Page extends Component {
         this.renderLis()
     }
     render() {
+        console.log(this.props, this.state)
         const prev = this.state.current === 1 || this.state.current === 0 ? 'item disabled' : 'item'
-        const next = this.state.current === this.totalPage ? 'item disabled' : 'item'
+        const next = this.state.current === this.state.totalPage ? 'item disabled' : 'item'
         return (
             <>
                <li className={prev} onClick={this.handleBackHome}>首页</li>
@@ -72,7 +72,7 @@ export default class Page extends Component {
                {this.state.rLis}
                <li className={next} onClick={this.handleNextPage}>下一页</li>
                <li className={next} onClick={this.handleBackLast}>尾页</li>
-               <span>{this.state.current}/{this.totalPage}</span>
+               <span>{this.state.current}/{this.state.totalPage}</span>
             </>
         )
     }
