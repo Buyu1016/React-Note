@@ -11,6 +11,9 @@ export default function StudentTable(props) {
                 <td>{item.sex === 1 ? '女' : '男'}</td>
                 <td>{item.phone}</td>
                 <td>{item.address}</td>
+                <td onClick={() => {
+                    props.history.push('/student/details/' + item.id)
+                }}>详情</td>
             </tr>
         )
     })
@@ -23,6 +26,7 @@ export default function StudentTable(props) {
                     <th>性别</th>
                     <th>手机号</th>
                     <th>地址</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>

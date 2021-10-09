@@ -7,7 +7,7 @@ import { getStudent } from '../../../../utils/tools'
 
 export default function StudentList(props) {
     const [resp, setResp] = useState({})
-    const [query, setQuery] = useState(getQuery(props.location.search))
+    const [query] = useState(getQuery(props.location.search))
     useEffect(() => {
         getStudent(query.sex, query.search, query.page, query.size).then(resp => {
             setResp(resp.data)
@@ -24,13 +24,14 @@ export default function StudentList(props) {
                         const newQuery = {
                             ...query,
                             search: val.search,
-                            sex: val.sex
+                            sex: val.sex,
+                            page: 1
                         }
                         const search = qs.stringify(newQuery)
-                        props.location.push('?' + search)
+                        props.history.push('?' + search)
                     }}
                 />
-                <StudentTable list={resp.datas}/>
+                <StudentTable history={props.history} list={resp.datas}/>
                 <div>
                     <Page
                         current={query.page}

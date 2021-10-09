@@ -1324,3 +1324,329 @@
         )
     }
 ```
+
+## Link组件
+
+### 一个不会刷新页面的a标签组件
+
+- 属性
+    - to:
+        - string/object
+        - to={string}
+        - to={
+            {
+                pathname: url,
+                hash: '#a',
+                search: '',
+                state: '附带的状态信息'
+            }
+            } 
+    - replace:
+        - bool
+        - 是否替换当前地址, 默认false
+    - innerRef:
+        - fn/object
+        - 可以将内部的a元素的ref附着再传递的对象或函数参数上
+```js
+    // 简单实现Link组件
+    import React from 'react'
+    import PropTypes from 'prop-types'
+    import { withRouter } from 'react-router-dom'
+
+    function Link(props) {
+        return (
+            <a
+                href={props.to}
+                onClick={(e) => {
+                    e.preventDefault()
+                    if (props.replace) {
+                        props.history.replace(props.to)
+                    } else {
+                        props.history.push(props.to)
+                    }
+                }}
+            >
+                {props.children}
+            </a>
+        )
+    }
+
+    Link.propTypes = {
+        to: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.object,
+        ]).isRequired,
+        replace: PropTypes.bool
+    }
+
+    Link.defaultProps = {
+        replace: false
+    }
+
+    export default withRouter(Link)
+```
+
+## NavLink
+
+### 和Link组件具备相同的功能, 唯一不同的是当当前页面的url和to所填写的url符合时会向a标签添加一个class为active, 
+
+- 属性
+    - activeClassName:
+        - 自定义改变匹配后的className
+    - activeStyle:
+        - 自定义匹配时使用的style
+    - exact:
+        - 是否精确匹配, 和Route组件的exact类似
+    - sensitive:
+        - 匹配是否区分大小写
+
+## Redirect
+
+### 自动跳转
+
+- 属性
+    - to:
+        - 和Link的to一致
+    - push:
+        - 使用push方式进行跳转
+    - from:
+        - 当符合from规则才能进行重定向跳转
+    - exact:
+        - 是否精确匹配, 和Route组件的exact类似
+    - sensitive:
+        - 匹配是否区分大小写
+
+# 简单实现Vue路由模式
+
+```js
+// ***route/index.js***
+// 模仿vueRoute模式
+import User from '../components/DemoEight/User'
+import News from '../components/DemoEight/News'
+import NewsSearch from '../components/DemoEight/NewsSearch'
+import NewsDetail from '../components/DemoEight/NewsDetail'
+import Home from '../components/DemoEight/Home'
+
+const routeConfig = [
+    {
+        path: '/user',
+        name: 'User',
+        component: User
+    }, {
+        path: '/news',
+        name: 'News',
+        component: News,
+        children: [
+            {
+                path: '/search',
+                name: 'NewsSearch',
+                component: NewsSearch
+            }, {
+                path: '/detail',
+                name: 'NewsDetail',
+                component: NewsDetail,
+                children: [
+                    {
+                        path: '/my',
+                        component: Home
+                    }
+                ]
+            }
+        ]
+    }, {
+        path: '/home',
+        name: 'Home',
+        component: Home
+    }
+]
+
+export default routeConfig
+
+// ***App.jsx***
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom';
+import RootRoute from './components/DemoEight/RootRoute'
+import VueLink from './components/DemoEight/VueLink';
+
+export default function App() {
+
+    return (
+      <BrowserRouter>
+        <div>
+          <nav>
+            <VueLink to={{
+              name: 'Home'
+            }}>首页</VueLink>
+            <VueLink to={{
+              name: 'User'
+            }}>我的页面</VueLink>
+            <VueLink to={{
+              name: 'News'
+            }}>新闻页面</VueLink>
+          </nav>
+          <div>
+            {/* 自动渲染页面 */}
+            <RootRoute />
+          </div>
+        </div>
+      </BrowserRouter>
+    );
+}
+
+// ***components/DemoEight/User.jsx***
+import React from 'react'
+
+export default function User(props) {
+    return (
+        <div>
+            <h1>User</h1>
+            <div>
+                {props.children}
+            </div>
+        </div>
+    )
+}
+
+// ***components/DemoEight/Home.jsx***
+import React from 'react'
+
+export default function Home(props) {
+    return (
+        <div>
+            <h1>Home</h1>
+            <div>
+                {props.children}
+            </div>
+        </div>
+    )
+}
+
+// ***components/DemoEight/News.jsx***
+import React from 'react'
+import { Redirect } from 'react-router-dom'
+import VueLink from './VueLink'
+
+export default function News(props) {
+    return (
+        <div>
+            <h1>news</h1>
+            <nav>
+                <VueLink to={{
+                    name: 'NewsSearch'
+                }}>新闻搜索页</VueLink>
+                <VueLink to={{
+                    name: 'NewsDetail'
+                }}>新闻详情页</VueLink>
+                <Redirect to='/news/search'/>
+            </nav>
+            <div>
+                {props.children}
+            </div>
+        </div>
+    )
+}
+
+// ***components/DemoEight/NewsSearch.jsx***
+import React from 'react'
+
+export default function NewsSearch() {
+    return (
+        <div>
+            News Search
+        </div>
+    )
+}
+
+// ***components/DemoEight/NewsDetail.jsx***
+import React from 'react'
+
+export default function NewsDetail() {
+    return (
+        <div>
+            News Detail
+        </div>
+    )
+}
+
+// ***components/DemoEight/RootRoute.jsx***
+import React from 'react'
+import { Switch, Route } from 'react-router-dom'
+import routeConfig from '../../route/index'
+
+
+export default function RootRoute() {
+    const list = getRouteReacts(routeConfig)
+    return (
+        <div>
+            {list}
+        </div>
+    )
+}
+
+function getRouteReacts(routes, basePath="") {
+    const routeList = routes.map((item, index) => {
+        const { children, path, component:Component, ...rest } = item
+        return <Route
+                    {...rest}
+                    path={basePath + path}
+                    key={index}
+                    render={(values) => {
+                        if (children) {
+                            return <Component {...values}>
+                                {getRouteReacts(children, basePath + path)}
+                            </Component>
+                        } else {
+                            return <Component />
+                        }
+                    }}
+                />
+    })
+    return (
+        <Switch>
+            {routeList}
+        </Switch>
+    )
+}
+
+// ***components/DemoEight/VueLink.jsx***
+import React from 'react'
+import { Link } from 'react-router-dom'
+import searchPath from '../../utils/searchPath'
+
+export default function VueLink({to, children, ...rest}) {
+    
+    if (typeof to !== 'string' && to.name) {
+        // 根据name找到路由配置文件中响应的path路径
+        to.name = searchPath(to.name)
+        if (!to.name) {
+            throw new Error(`No path matching route ${to.name} was found`)
+        }
+    }
+    return (
+        <Link to={to.name} {...rest}>{children}</Link>
+    )
+}
+
+// ***utils/searchPath.js***
+import routeConfig from '../route/index'
+
+export default function searchPath(name, basePath='', route=routeConfig) {
+    for (const iterator of route) {
+        if (iterator.name === name) {
+            return basePath + iterator.path
+        } else if (iterator.children) {
+            const path = searchPath(name, basePath + iterator.path, iterator.children)
+            if (path) {
+                return path
+            }
+        }
+    }
+}
+
+```
+
+## 实现路由守卫
+
+```js
+
+```
