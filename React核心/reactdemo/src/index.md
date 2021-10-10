@@ -1648,5 +1648,65 @@ export default function searchPath(name, basePath='', route=routeConfig) {
 ## 实现路由守卫
 
 ```js
+    import React, { PureComponent } from 'react'
+    import { withRouter } from 'react-router-dom'
 
+
+    class RouteWatch extends PureComponent {
+
+        componentDidMount() {
+            console.log(this.props)
+            // 监听页面跳转
+            this.listen = this.props.history.listen((location, action) => {
+                this.props.onChange && this.props.onChange(location, action, this.props.location)
+            })
+            // 设置阻塞
+            // 可以为字符串供给BrowserRouter的getUserConfirmation所用
+            // 这里也可以使用函数, 函数返回true则跳转, false反之
+            this.props.history.block(() => {
+                // if (Math.random() > 0.5) {
+                //     return true
+                // } else {
+                //     console.log('禁止跳转');
+                //     return false
+                // }
+                return true
+            })
+        }
+        
+        componentWillUnmount() {
+            // 关闭监听
+            this.listen()
+        }
+        
+
+
+        render() {
+            return (
+                <>{this.props.children}</>
+            )
+        }
+    }
+
+    export default withRouter(RouteWatch)
 ```
+
+# Redux
+
+## action
+
+### 用于描述要做什么
+
+- **注意事项**
+    - action是一个plain-object(平面对象)
+    - action必须拥有type属性, 用于描述此次操作
+    - 为了方便/避免出错, 通常会用action创建函数来创建action(就是函数返回个平面对象罢了)
+    - action应为纯函数, 不应该有副作用
+    - 为了懒, 可以自行写一个自行分发的函数, 少写点代码
+## reducer
+
+### 处理其, 用于根据action描述处理数据, 并把处理后的数据给予store
+
+## store
+
+### 数据仓库, 用于存储共享数据

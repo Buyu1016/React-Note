@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './redux/index'
 import './style/global.css'
 import App from './App'
 import 'animate.css'
