@@ -1703,10 +1703,90 @@ export default function searchPath(name, basePath='', route=routeConfig) {
     - 为了方便/避免出错, 通常会用action创建函数来创建action(就是函数返回个平面对象罢了)
     - action应为纯函数, 不应该有副作用
     - 为了懒, 可以自行写一个自行分发的函数, 少写点代码
+
+### 实现bindActionCreator
+
+```js
+
+```
+
 ## reducer
 
 ### 处理其, 用于根据action描述处理数据, 并把处理后的数据给予store
 
+- **注意事项**
+    - 一个仓库有且只有一个reducer
+    - 通常情况下一个工程只会有一个仓库
+    - 会在创建store时会运行一次reducer
+    - 通常reducer函数内部会使用switch语法
+    - reducer必须是一个没有副作用的纯函数
+    - reducer函数内部不能写异步
+    - redux提供有合并reducer方法(combineReducers)
+
 ## store
+
+- **注意事项**
+    - store.subscribe(() => {})可以监听状态是否变化, 该函数会返回一个函数, 返回的函数用于取消监听器
+    - 通过createStore方法创建Store
+
+### 实现createStore
+
+```js
+    import { v4 } from 'uuid'
+    /**
+     * 
+     * @param { Function } reducer reducer
+     * @param { any } InitialValue 初始值
+     * @returns 
+     */
+    export function createStore(reducer, InitialValue) {
+        // 仓库数据
+        let storeValue = InitialValue
+        // 监听器集合
+        let watchList = []
+        function dispatch(action) {
+            
+            // 验证action是否为对象
+            if (Object.prototype.toString.call(action) !== '[object Object]') {
+                throw new Error(`Actions must be plain objects. Instead, the actual type was: ${Object.prototype.toString.call(action)}. You may need to add middleware to your store setup to handle dispatching other values, such as 'redux-thunk' to handle dispatching functions. `)
+            }
+            // 判断action是否为一个平面对象
+            if (action.__proto__ === Object.prototype) {
+            // 判断action对象中是否具有type属性 
+            if (!action.hasOwnProperty('type')) {
+                throw new Error(`Actions may not have an undefined "type" property. You may have misspelled an action type string constant.`)
+            }
+            }
+            // 到这一步就表示了action没问题
+            // 运行reducer
+            storeValue = reducer(storeValue, action)
+
+            // 运行监听器
+            for (const iterator of watchList) {
+                iterator()
+            }
+        }
+
+        // 在创建仓库的时候应调用一次reducer
+        dispatch({type: `@@redux/${v4()}`})
+        function getState() {
+            return storeValue
+        }
+
+        function subscribe(callback) {
+            watchList.push(callback)
+            return function () {
+                watchList = watchList.filter(item => item !== callback)
+            }
+        }
+
+        return {
+            dispatch,
+            getState,
+            subscribe
+        }
+    }
+```
+
 
 ### 数据仓库, 用于存储共享数据
