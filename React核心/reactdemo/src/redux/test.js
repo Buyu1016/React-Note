@@ -1,8 +1,12 @@
 import store from './index'
-import { createUpdateUserAction } from './action/userAction'
+import { createLoginUserAction, createSignUserAction, createUpdateUserAction } from './action/userAction'
 import { v1 } from 'uuid'
 
-store.dispatch(createUpdateUserAction({
+console.log(store.dispatch)
+
+store.dispatch(createLoginUserAction({
     id: v1(),
-    userName: 'maomao'
+    userName: 'CodeGorgeous'
 }))
+
+store.dispatch(createUpdateUserAction())

@@ -1,8 +1,11 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore } from 'redux'
+// import { applyMiddleware } from 'redux'
+import { applyMiddleware } from '../utils/rewriteRedux/applyMiddleware'
 import reducer from './reducer/index'
 import logger from 'redux-logger'
-import thunk from 'redux-thunk'
 // import { createLogger } from 'redux-logger'
+// import thunk from 'redux-thunk'
+import thunk from '../utils/rewriteRedux/redux-thunk'
 // import { createSetCookieAction, createClearCookieAction } from './action/cookieAction'
 
 // logger配置
