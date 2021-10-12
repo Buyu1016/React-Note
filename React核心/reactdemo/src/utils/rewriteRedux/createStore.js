@@ -2,12 +2,23 @@ import { v4 } from 'uuid'
 /**
  * 
  * @param { Function } reducer reducer
- * @param { any } InitialValue 初始值
+ * @param { any } initialValue 初始值
+ * @param { Function } middleware
  * @returns 
  */
-export function createStore(reducer, InitialValue) {
+export function createStore(reducer, initialValue, middleware) {
+    // 中间件
+    let middlewareFn = middleware;
+    if (Object.prototype.toString.call(initialValue) === '[object Function]') {
+        middlewareFn = initialValue
+        initialValue = undefined
+    }
     // 仓库数据
-    let storeValue = InitialValue
+    let storeValue = initialValue
+    // 判断传入的中间件是否为一个函数
+    if (Object.prototype.toString.call(middlewareFn) === '[object Function]') {
+        return middlewareFn(createStore)(reducer, storeValue)
+    }
     // 监听器集合
     let watchList = []
     function dispatch(action) {

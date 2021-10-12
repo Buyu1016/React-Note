@@ -1,27 +1,22 @@
-// import { bindActionCreators } from 'redux'
-import { createStore } from '../utils/rewriteRedux/createStore'
-import { bindActionCreators } from '../utils/rewriteRedux/bindActionCreators'
+import { createStore, applyMiddleware } from 'redux'
 import reducer from './reducer/index'
-import { createLoginUserAction, createSignUserAction } from './action/userAction'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
+// import { createLogger } from 'redux-logger'
 // import { createSetCookieAction, createClearCookieAction } from './action/cookieAction'
 
-const store = createStore(reducer) // 一次user一次cookie
+// logger配置
+// const logger = createLogger({
+//     // 在数据更新时进行调用
+//     predicate: () => {
+//         console.log('已调用')
+//     },
+//     collapsed: (state, action) => {
+//         console.log(state, action)
+//     }
+// })
 
-const userAction = {
-    loginUser: createLoginUserAction,
-    signUser: createSignUserAction
-}
-// redux原生
-// const userActions = bindActionCreators(userAction, store.dispatch)
-// 重写后
-const userActions = bindActionCreators(userAction, store.dispatch)
+export default createStore(reducer, applyMiddleware(thunk, logger))
 
-// console.log(userActions)
 
-userActions.loginUser({
-    userName: 'maomao',
-    id: 1
-})
-
-console.log(store.getState());
 

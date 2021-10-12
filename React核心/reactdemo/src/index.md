@@ -1707,7 +1707,30 @@ export default function searchPath(name, basePath='', route=routeConfig) {
 ### 实现bindActionCreator
 
 ```js
-
+    /**
+     * 自动分发
+     * @param {*} action action对象集合
+     * @param {*} dispatch 分发函数
+     * @returns 
+     */
+    export function bindActionCreators(action, dispatch) {
+        // action为对象的情况
+        if (typeof action === 'object') {
+            const newObj = {}
+            for (const key in action) {
+                newObj[key] = (payload) => {
+                    dispatch(action[key](payload))
+                }
+            }
+            return newObj
+        } else if (typeof action === 'function') {
+            return (payload) => {
+                dispatch(action(payload))
+            }
+        } else {
+            throw new TypeError(`bindActionCreators expected an object or a function, but instead received: ${Object.prototype.toString.call(action)}.`)
+        }
+    }
 ```
 
 ## reducer
@@ -1723,6 +1746,41 @@ export default function searchPath(name, basePath='', route=routeConfig) {
     - reducer函数内部不能写异步
     - redux提供有合并reducer方法(combineReducers)
 
+### 实现combineReducers
+
+```js
+    import { v4 } from 'uuid'
+
+    export function combineReducers(reducers) {
+        // 判断是否为对象
+        if (Object.prototype.toString.call(reducers) !== '[object Object]') {
+            throw new Error(`Store does not have a valid reducer. Make sure the argument passed to combineReducers is an object whose values are reducers.`)
+        } else {
+            // 是否为平面对象
+            if (reducers.__proto__ !== Object.prototype) {
+                throw new Error('Action should be a flat object')
+            } else {
+                // 验证reducer是否会为undefined
+                for (const key in reducers) {
+                    if (reducers[key](undefined, {type: `@@redux/INIT${v4()}`}) === 'undefined') {
+                        throw new Error(`Returned undefined during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of undefined.`)
+                    }
+                    if (reducers[key](undefined, {type: `@@redux/PROBE_UNKNOWN_ACTION${v4()}`}) === 'undefined') {
+                        throw new Error(`Returned fixed value during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of fixed value.`)
+                    }
+                }
+            }
+        }
+        return function (state = {}, action) {
+            const newState = {}
+            for (const key in reducers) {
+                newState[key] = reducers[key](state[key], action)
+            }
+            return newState
+        }
+    }
+```
+
 ## store
 
 - **注意事项**
@@ -1736,12 +1794,23 @@ export default function searchPath(name, basePath='', route=routeConfig) {
     /**
      * 
      * @param { Function } reducer reducer
-     * @param { any } InitialValue 初始值
+     * @param { any } initialValue 初始值
+     * @param { Function } middleware
      * @returns 
      */
-    export function createStore(reducer, InitialValue) {
+    export function createStore(reducer, initialValue, middleware) {
+        // 中间件
+        let middlewareFn = middleware;
+        if (Object.prototype.toString.call(initialValue) === '[object Function]') {
+            middlewareFn = initialValue
+            initialValue = undefined
+        }
         // 仓库数据
-        let storeValue = InitialValue
+        let storeValue = initialValue
+        // 判断传入的中间件是否为一个函数
+        if (Object.prototype.toString.call(middlewareFn) === '[object Function]') {
+            return middlewareFn(createStore)(reducer, storeValue)
+        }
         // 监听器集合
         let watchList = []
         function dispatch(action) {
@@ -1756,6 +1825,8 @@ export default function searchPath(name, basePath='', route=routeConfig) {
             if (!action.hasOwnProperty('type')) {
                 throw new Error(`Actions may not have an undefined "type" property. You may have misspelled an action type string constant.`)
             }
+            } else {
+                throw new Error('Action should be a flat object')
             }
             // 到这一步就表示了action没问题
             // 运行reducer
@@ -1790,3 +1861,86 @@ export default function searchPath(name, basePath='', route=routeConfig) {
 
 
 ### 数据仓库, 用于存储共享数据
+
+## redux中间件
+
+### 中间件: 类似于插件, 会在原代码正常运行的情况下增强其功能
+
+- **Redux中间件**
+    - 中间件自身是一个函数, 接收一个store参数, 该store只有两个属性getState和dispatch
+    - 中间件必须返回一个dispatch函数
+
+```js
+// 中间件书写标准格式
+    function getStoreMessage(store) {
+        // store上的dispatch是最初始的
+        console.log('getStoreMessage中间件运行', store)
+        
+        // 该dispatch是下一个中间件所传过来的
+        return function (dispatch) {
+            return function (action) {
+                console.log('中间件OldState信息:', store.getState())
+                console.log('中间件Action信息:', action)
+                dispatch(action)
+                console.log('中间件NewState信息:', store.getState())
+            }
+        }
+    }
+
+    function middleware2(store) {
+        console.log('中间件2')
+        return function (dispatch) {
+            return function (action) {
+                console.log('中间件2的dispatch触发')
+                dispatch(action)
+            }
+        }
+    }
+    // 中间件运行顺序总结
+    // getStoreMessage中间件运行 -> 中间件2 -> 中间件OldState信息 -> 中间件Action信息 -> 中间件2的dispatch触发 -> 中间件NewState信息
+
+    // getStoreMessage中间件运行的dispatch是运行的中间件2所返回的dispatch
+```
+
+### 实现applyMiddleware
+
+```js
+    export function applyMiddleware(...rest) {
+        return function (createStore) {
+            return function (reducers, initValue) {
+                const store = createStore(reducers, initValue)
+                let dispatch = () => {
+                    throw new Error('Dispatch is temporarily unavailable')
+                }
+                const newStore = {
+                    dispatch: store.dispatch,
+                    getState: store.getState
+                }
+                let createDispatchList = []
+                for (const iterator of rest) {
+                    createDispatchList = [iterator(newStore), ...createDispatchList]
+                }
+                dispatch = store.dispatch
+                for (const createDispatch of createDispatchList) {
+                    dispatch = createDispatch(dispatch)
+                }
+                return {
+                    ...store,
+                    dispatch
+                }
+            }
+        }
+    }
+```
+
+## **Redux中间件运行关系图**
+
+![Redux中间件关系图](./assets/Redux中间件关系图.PNG)
+
+## Redux第三方库
+
+### [redux-logger](https://www.npmjs.com/package/redux-logger)
+
+#### 主要用于日志记录, 一般会把logger这个中间件放在最后一个
+
+### [redux-thunk](https://www.npmjs.com/package/redux-thunk)

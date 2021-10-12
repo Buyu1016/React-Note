@@ -14,11 +14,11 @@
 
 import user from './user'
 import cookie from './cookie'
-// import { combineReducers } from 'redux'
-import { combineReducers } from '../../utils/rewriteRedux/combineReducers'
+import { combineReducers } from 'redux'
+// import { combineReducers } from '../../utils/rewriteRedux/combineReducers'
 
 // 自行封装的简易版reducer合并
-const initialState = {}
+// const initialState = {}
 
 // export default (state = initialState, action) => {
 //     const newState = {

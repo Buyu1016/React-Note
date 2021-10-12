@@ -1,0 +1,14 @@
+.item {
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.item.disabled {
+    pointer-events:none;
+    cursor: not-allowed;
+}
+
+.item.active {
+    border: none;
+    color: red;
+}

@@ -1,0 +1,82 @@
+/* div {
+    transition: all 1s ease-in-out;
+}
+
+h1 {
+    display: inline-block;
+}
+
+span {
+    display: inline-block;
+    transition: all 1s ease-in-out;
+}
+
+.exited {
+    color: black;
+    opacity: 0;
+}
+
+.exiting {
+    color: black;
+    opacity: 0;
+}
+
+.entering {
+    color: red;
+    opacity: 1;
+}
+
+.entered {
+    color: red;
+    opacity: 1;
+}
+
+.my-enter {
+    opacity: 1;
+}
+
+.my-enter-active {
+    opacity: 1;
+}
+
+.my-enter-done {
+    opacity: 1;
+}
+
+.my-exit {
+    opacity: 0;
+}
+
+.my-exit-active {
+    opacity: 0;
+}
+
+.my-exit-done {
+    opacity: 0;
+}
+
+.A-enter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-100px);
+}
+
+.A-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.A-enter-done {
+    opacity: 1;
+}
+
+
+.A-exit-active {
+    opacity: 0;
+    transform: translateX(100px);
+}
+
+.A-exit-done {
+    display: none;
+} */
+

@@ -13,3 +13,10 @@ export function createSignUserAction() {
         type: SIGNUSER
     }
 }
+
+export const createUpdateUserAction = (payload) => {
+    return {
+        type: LOGINUSER,
+        payload
+    }
+}

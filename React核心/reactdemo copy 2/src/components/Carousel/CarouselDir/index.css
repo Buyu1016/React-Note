@@ -1,0 +1,14 @@
+.carousel-dir-container {
+    background: rgba(170, 170, 170, 0.5);
+    padding: 1px 7px;
+    display: inline-block;
+    border-radius: 7px;
+}
+.carousel-dir-item {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin: 2px;
+    border-radius: 50%;
+    cursor: pointer;
+}

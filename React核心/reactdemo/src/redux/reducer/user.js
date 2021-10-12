@@ -12,7 +12,6 @@ const initialState = {
 
 // undefined 'set-login'
 export default (state = initialState, { type, payload }) => {
-    console.log('user运行', type)
     switch (type) {
         case LOGINUSER:
             return { ...state, ...payload, isLogin: true }
