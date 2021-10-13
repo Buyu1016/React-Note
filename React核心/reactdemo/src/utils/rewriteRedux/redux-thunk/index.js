@@ -5,7 +5,7 @@ function createThunk(extra) {
         return (dispatch) => {
             return (action) => {
                 if (Object.prototype.toString.call(action) === '[object Function]') {
-                    return action(store.dispatch, store.getState, extra)
+                    return action(dispatch, store.getState, extra)
                 } else {
                     return dispatch(action)
                 }

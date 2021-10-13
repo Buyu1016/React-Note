@@ -1944,3 +1944,205 @@ export default function searchPath(name, basePath='', route=routeConfig) {
 #### 主要用于日志记录, 一般会把logger这个中间件放在最后一个
 
 ### [redux-thunk](https://www.npmjs.com/package/redux-thunk)
+
+#### 实现redux-thunk
+
+```js
+    /* eslint import/no-anonymous-default-export: off */
+
+    function createThunk(extra) {
+        return (store) => {
+            return (dispatch) => {
+                return (action) => {
+                    if (Object.prototype.toString.call(action) === '[object Function]') {
+                        return action(dispatch, store.getState, extra)
+                    } else {
+                        return dispatch(action)
+                    }
+                }
+            }
+        }
+    }
+
+    const thunk = createThunk()
+    thunk.withExtra = createThunk
+
+    export default thunk
+```
+
+### [redux-promise](https://www.npmjs.com/package/redux-promise)
+
+#### 实现redux-promise
+
+```js
+    /* eslint import/no-anonymous-default-export: off */
+    import { isPlainObject, isString } from 'lodash'
+
+    export default function(store) {
+        return (dispatch) => {
+            return (action) => {
+                // 判断action是否为一个标准的flux的action
+                if(isFluxAction(action)) {
+                    if (action.payload.__proto__ === Promise.prototype) {
+                        action.payload.then(resp => {
+                            return dispatch({
+                                ...action,
+                                payload: resp
+                            })
+                        }).catch((err) => {
+                            return dispatch({
+                                ...action,
+                                payload: err,
+                                error: true
+                            })
+                        })
+                    } else {
+                        return dispatch(action)
+                    }
+                } else {
+                    if (action.__proto__ === Promise.prototype) {
+                        action.then(resp => {
+                            return dispatch(resp)
+                        }).catch(err => {
+                            return dispatch({
+                                ...action,
+                                payload: err,
+                                error: true
+                            })
+                        })
+                    } else {
+                        throw new Error(`Actions must be plain objects. Instead, the actual type was: '${Object.prototype.toString.call(action)}'. You may need to add middleware to your store setup to handle dispatching other values`)
+                    }
+                }
+            }
+        }
+    }
+
+    function isFluxAction(action) {
+        return isPlainObject(action) && isString(action.type) && Object.keys(action).every(item => ['type', 'payload', 'error', 'meta'].includes(item))
+    }
+```
+
+### [redux-saga](https://redux-saga.js.org/)
+
+### [复习]迭代相关知识
+
+```js
+    // 迭代器
+    var iterator = {
+        total: 2,
+        current: 0,
+        next() {
+            return {
+                value: this.current > this.total ? undefined : this.current++,
+                done: this.current > this.total
+            }
+        }
+    }
+
+    // 斐波那契数列迭代器
+    var fibonacci = {
+        one: 1,
+        two: 1,
+        current: 1,
+        next() {
+            if (this.current <= 2) {
+                value = 1
+            } else {
+                value = this.one + this.two
+                this.one = this.two
+                this.two = value
+            }
+            this.current++
+            return {
+                value,
+                done: false
+            }
+        }
+    }
+
+    // 无聊随笔写的
+    // 根据传入的总次数, 直接打印相对应次数的斐波那契数列
+    function printFibonacci(index) {
+        let current = 1
+        let fibonacci = {
+            one: 1,
+            two: 1,
+            next() {
+                if (current <= 2) {
+                    value = 1
+                } else {
+                    value = this.one + this.two
+                    this.one = this.two
+                    this.two = value
+                }
+                current++
+                return {
+                    value,
+                    done: current > index
+                }
+            }
+        }
+        for (let i = 0; i < index; i++) {
+            console.log(fibonacci.next())
+        }
+    }
+
+    // 这种返回一个迭代器的称之为迭代器创建函数
+    function createFibonacci(total) {
+        let current = 1
+        return {
+            one: 1,
+            two: 1,
+            next() {
+                if (current <= 2) {
+                    value = 1
+                } else if (current > total) {
+                    value = undefined
+                } else {
+                    value = this.one + this.two
+                    this.one = this.two
+                    this.two = value
+                }
+                current++
+                return {
+                    value,
+                    done: current > total
+                }
+            }
+        }
+    }
+
+    // 可迭代协议
+
+    const iteratorFibonacci = {
+        [Symbol.iterator]: function () {
+            let current = 0
+            let total = 10
+            return {
+                one: 1,
+                two: 1,
+                next() {
+                    if (current < 2) {
+                        value = 1
+                    } else if (current > total) {
+                        value = undefined
+                    } else {
+                        value = this.one + this.two
+                        this.one = this.two
+                        this.two = value
+                    }
+                    current++
+                    return {
+                        value,
+                        done: current > total
+                    }
+                }
+            }
+        }
+    }
+
+    for (const iterator of iteratorFibonacci) {
+        console.log(iterator)
+    }
+```

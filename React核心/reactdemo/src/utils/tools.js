@@ -60,3 +60,20 @@ export async function getStudent(sex = -1, search = "", page = 1, size = 5) {
         return result
     }
 }
+
+/**
+ * 增添一个学生
+ * @param {String} sNo 学号
+ * @param {String} name 姓名
+ * @param {Int} sex 性别 0-男 1-女
+ * @param {Int} birth 生日
+ * @param {String} phone 手机号
+ * @param {String} email 邮箱
+ * @param {String} address 住址
+ * @returns 
+ */
+export async function addStudent(sNo = '0', name = "", sex= 0, birth = 0, phone = '0', email = '0', address = '') {
+    return await fetch(`${domain}/api/student/addStudent?appkey=${appkey}&sNo=${sNo}&name=${name}&sex=${sex}&birth=${birth}&phone=${phone}&email=${email}&address=${address}`, {
+        method: 'GET'
+    }).then(resp => resp.json)
+}
