@@ -2023,8 +2023,6 @@ export default function searchPath(name, basePath='', route=routeConfig) {
     }
 ```
 
-### [redux-saga](https://redux-saga.js.org/)
-
 ### [复习]迭代相关知识
 
 ```js
@@ -2146,3 +2144,45 @@ export default function searchPath(name, basePath='', route=routeConfig) {
         console.log(iterator)
     }
 ```
+
+### [复习]生成器 **真的没听懂**
+
+```js
+```
+
+### [redux-saga](https://redux-saga.js.org/)
+
+- saga指令
+    - tack指令
+        - 监听action变化, 只会执行一次监听, 可死循环持续监听action
+        - 会返回一个值为变化的action
+        - 会阻塞
+    - all指令
+        - 用于统一管控多个指令
+    - takeEvery指令
+        - 持续监听action变化, 并有回调函数可用
+        - 不会阻塞
+        - 监控可以传值为'*', 意为监控全部action变化(前提是action.type必须是字符串)
+    - delay指令
+        - 延迟指定的毫秒数后在向后续执行
+        - 阻塞
+    - put指令
+        - 用于重新触发action, 相当于dispatch(action)
+    - call指令
+        - 自动执行函数, 如果返回一个Promise则会进行等待
+        - 和正常的call基本一致, 第一个参数为函数, 后续为参数, 第一个参数可以为对象/数组, 可以改变其函数的this指向
+        - 正常: call(getAllStudent, 参数1, 参数2)
+        - 对象: call({context: '123', fn: getAllStudent}, 参数1, 参数2)
+        - 数组: call(['123', getAllStudent], 参数1, 参数2)
+        - 可能阻塞(主要看传入的是否需要等待)
+    - apply指令
+        - 和call指令基本相同, 就是参数传递不同
+        - apply也类似与原生的apply的使用方式, 参数以数组形式传入
+        - 正常: apply(null, getAllStudent, [参数1, 参数2])
+        - 可能阻塞(主要看传入的是否需要等待)
+    - select指令
+        - 用于拿到仓库的数据
+        - 可以传入一个函数, 用于筛选数据
+    - cps指令
+        - 用于等待不是promise的回调模式的函数
+        - 阻塞
