@@ -2158,11 +2158,16 @@ export default function searchPath(name, basePath='', route=routeConfig) {
         - 会返回一个值为变化的action
         - 会阻塞
     - all指令
+        - 全部指令执行完毕, 则结束
         - 用于统一管控多个指令
     - takeEvery指令
         - 持续监听action变化, 并有回调函数可用
+        - 会返回一个对象, 类型为Task, 返回的对象可用于取消任务
         - 不会阻塞
         - 监控可以传值为'*', 意为监控全部action变化(前提是action.type必须是字符串)
+    - takeLatest指令
+        - 和takeEvery基本一致
+        - 唯一不同点是会重复触发会自动取消上次的任务
     - delay指令
         - 延迟指定的毫秒数后在向后续执行
         - 阻塞
@@ -2185,4 +2190,17 @@ export default function searchPath(name, basePath='', route=routeConfig) {
         - 可以传入一个函数, 用于筛选数据
     - cps指令
         - 用于等待不是promise的回调模式的函数
+        - 阻塞
+    - fork指令
+        - 用于开启一个新的任务
+        - 会返回一个对象, 类型为Task, 返回的对象可用于取消任务
+        - 不会阻塞
+    - cancel指令
+        - 用于取消一个/多个任务
+        - 如果不传递参数则是取消自身任务线
+    - cancelled指令
+        - 判断当前任务线是否被cancel取消掉
+    - race指令
+        - 可以传入多个指令, 当某个指令结束则直接强制结束其他所有指令
+        - ```yield race({a1: call(asyncGet),a2: call(asyncGet),a3: ca(asyncGet),a4: call(asyncGet),a5: call(asyncGet)})```, 例如a3最快执行完毕, 则最后返回 {a3: asyncGet()}
         - 阻塞

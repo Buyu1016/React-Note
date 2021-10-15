@@ -41,18 +41,18 @@ export const FETCHSTUDENT = Symbol('student-fetch')
 //     }
 // }
 
-// export const createAddStudentAction = (payload) => {
-//     return (dispatch) => {
-//         addStudent(payload.sNo, payload.name, payload.sex, payload.birth, payload.phone, payload.email, payload.address).then(resp => {
-//             getAllStudent().then(resp => {
-//                 dispatch({
-//                     type: STUDENTUPDATE,
-//                     payload: resp.data
-//                 })
-//             })
-//         })
-//     }
-// }
+export const createAddStudentAction = (payload) => {
+    return (dispatch) => {
+        addStudent(payload.sNo, payload.name, payload.sex, payload.birth, payload.phone, payload.email, payload.address).then(resp => {
+            getAllStudent().then(resp => {
+                dispatch({
+                    type: STUDENTUPDATE,
+                    payload: resp.data
+                })
+            })
+        })
+    }
+}
 
 export const createClearStudentAction = () => {
     return {
