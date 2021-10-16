@@ -1,6 +1,13 @@
 export const effectTypes = {
     CALL: 'CALL',
-    DELAy: 'DELAY'
+    DELAy: 'DELAY',
+    PUT: 'PUT',
+    SELECT: 'SELECT',
+    TASK: 'TASK',
+    FORK: 'FORK',
+    CANCEL: 'CANCEL',
+    TAKEEVERY: 'TAKEEVERY',
+    ALL: 'ALL'
 }
 
 export function createEffect(type, payload) {
@@ -16,5 +23,12 @@ export function createEffect(type, payload) {
     }
 }
 
-export { call, runCall } from './call'
+export { call } from './call'
 export { delay } from './delay'
+export { put } from './put'
+export { select } from './select'
+export { take } from './take'
+export { fork } from './fork'
+export { cancel } from './cancel'
+export { takeEvery } from './takeEvery'
+export { all } from './all'

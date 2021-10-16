@@ -2204,3 +2204,11 @@ export default function searchPath(name, basePath='', route=routeConfig) {
         - 可以传入多个指令, 当某个指令结束则直接强制结束其他所有指令
         - ```yield race({a1: call(asyncGet),a2: call(asyncGet),a3: ca(asyncGet),a4: call(asyncGet),a5: call(asyncGet)})```, 例如a3最快执行完毕, 则最后返回 {a3: asyncGet()}
         - 阻塞
+### 重写redux-saga
+
+```js
+// 重写的文件位置: src/utils/rewriteRedux/redux-saga
+// 个人写的时候的问题: 最后写all指令是处理promise集合是出现问题, 使用Promise.all(promise集合)时无法跟踪到所有集合处理完毕, 使得all没有运行其then
+```
+
+### [redux-actions](https://www.npmjs.com/package/redux-actions)

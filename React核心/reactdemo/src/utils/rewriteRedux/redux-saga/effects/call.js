@@ -11,12 +11,12 @@ export function call(fn, ...args) {
     return createEffect(effectTypes.CALL, {
         context,
         fn: func,
-        arguments: args,
+        args: args,
     })
 }
 
-export function runCall(store, value, next) {
-    const result = value.payload.fn.call(value.payload.context, ...value.payload.arguments)
+export function runCall(env, value, next) {
+    const result = value.payload.fn.call(value.payload.context, ...value.payload.args)
     if (isPromise(result)) {
         result.then(resp => next(resp)).catch((err) => next(null, err))
     } else (
