@@ -2212,3 +2212,56 @@ export default function searchPath(name, basePath='', route=routeConfig) {
 ```
 
 ### [redux-actions](https://www.npmjs.com/package/redux-actions)
+
+## [react-redux](https://www.npmjs.com/package/react-redux)
+
+### 官方出品, 用于链接redux和react
+
+- 注意事项
+    - Provider组件
+        - 没有任何的UI界面, 该组件将仓库放到上下文中
+    - connect高阶组件
+        - 链接仓库和组件
+        - 参数说明
+            - 第一个参数(mapStateToProps):
+                - function(state){}
+                - 该函数必须返回一个对象
+                - 返回的对象会在props中展开
+            - 第二个参数(mapDispatchToProps)/对象(不推荐):
+                - function(dispatch) {}
+                - 该函数必须返回一个对象
+                - 返回的对象会在props中展开
+                - 当不传递这个参数, 则在组件内props会拥有一个dispatch(**不推荐, 会让组件变得混乱**)
+
+
+## 展示组件
+
+### 如果一个组件仅用于渲染一个页面, 而没有自己的状态, 通常称这种组件为展示组件
+
+## 容器组件
+
+### 如果一个组件仅用于提供数据, 没有自己的渲染页面UI, 通常称这种组件为容器组件
+
+### 手写Provider和connect
+
+```js
+    // 文件位置: src/utils/rewriteRedux/react-redux
+    // 只是简单实现了一下, 像是connect的ref转发并未实现
+```
+
+### 额外的API
+
+## [connected-react-router](https://www.npmjs.com/package/connected-react-router)
+
+### 用于将redux和router结合
+
+# Chrome插件
+
+## React Developer Tools
+
+### 可以看到组件层级, 及组件内的一些数据
+
+## Redux DevTools
+
+### **注意: 需要项目内有redux-devtools-extension才能正常使用该插件**
+

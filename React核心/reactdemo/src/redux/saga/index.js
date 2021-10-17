@@ -1,26 +1,18 @@
 /* eslint import/no-anonymous-default-export: off, require-yield: off */
-// import { call, delay, all } from 'redux-saga/effects'
-import { call, delay, fork, put, select, take, takeEvery, all } from '../../utils/rewriteRedux/redux-saga/effects'
-// import { cancel } from '../../utils/rewriteRedux/redux-saga/effects/cancel'
-// import { createClearStudentAction } from '../action/student'
+import { call, put, take } from 'redux-saga/effects'
+import { actions } from '../action/student'
+import { getStudent } from '../../utils/tools'
 
 export default function* () {
-    console.log('saga已启动')
-    yield all([demo1(), demo2(), demo3()])
-    console.log('saga任务执行完毕')
+    console.log('saga任务已启动')
+    while (true) {
+        let result;
+        result = yield take(actions.fetchSearchStudent().type)
+        console.log('开始请求数据')
+        result = yield call(getStudent, result.payload.sex, result.payload.word)
+        console.log('开始设置数据', result.data.datas)
+        yield put(actions.searchStudent(result.data.datas))
+        console.log('此次监听完毕')
+    }
 }
 
-function* demo1() {
-    yield delay(1000)
-    console.log('执行1')
-}
-
-function* demo2() {
-    yield delay(1000)
-    console.log('执行2')
-}
-
-function* demo3() {
-    yield delay(1000)
-    console.log('执行3')    
-}
