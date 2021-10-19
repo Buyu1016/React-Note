@@ -31,7 +31,7 @@ export default {
         *asyncSignOut(action, obj) {
             console.log('异步触发, 将于2s后登出')
             yield obj.call(delay, 2000)
-            yield obj.put({type: 'signOut'})
+            yield obj.put({type: 'user/signOut'})
             console.log('登出成功')
         }
     }

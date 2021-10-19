@@ -3,15 +3,13 @@ import routerConfig from './routerConfig'
 import counter from './models/counter'
 import user from './models/user'
 import { createBrowserHistory } from 'history'
-// import createLoading from 'dva-loading'
-import createLoading from './utils/dva-loading'
 
 // 会得到一个dva对象
 const app = dva({
     history: createBrowserHistory()
 })
-// 使用dva-loading插件
-app.use(createLoading())
+
+console.log(app)
 
 // app.router()
 // 设置根路由

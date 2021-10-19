@@ -12,7 +12,7 @@ export default {
     },
     subscriptions: {
         one(obj, fn) {
-            // console.log('执行', obj, fn)
+            console.log('执行', obj, fn)
         }
     }
 }
