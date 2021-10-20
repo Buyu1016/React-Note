@@ -9,7 +9,7 @@
     "animate": "^1.0.0",
     "animate.css": "^3.7.2",
     "connected-react-router": "^6.9.1",
-    "history": "^5.0.1",
+    "history": "^4.9.0",
     "is-generator": "^1.0.3",
     "is-promise": "^4.0.0",
     "lodash": "^4.17.21",

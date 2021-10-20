@@ -3,8 +3,8 @@ import reducer from './reducer/index'
 import logger from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 import rootSagaTask from './saga'
-import { composeWithDevTools  } from 'redux-devtools-extension'
-import { routerMiddleware } from 'connected-react-router'
+import { composeWithDevTools } from "redux-devtools-extension"
+import { routerMiddleware } from "connected-react-router"
 import history from './history'
 
 const routerMid = routerMiddleware(history)
