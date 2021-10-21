@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@umijs/preset-react": "^1.8.24",
+    "umi": "^3.5.20"
+  }
+}

@@ -2382,3 +2382,11 @@ export default function searchPath(name, basePath='', route=routeConfig) {
             - src/models其下的文件都为模型,文件名就是模型的namespace
         - 局部模型
             - 文件夹其下的创建model文件/models文件夹, 其创建的局部模型数据会被该文件夹下所有文件共享
+- 使用样式
+    - 全局样式
+        - umi约定了在src/global.css文件内的样式式全局样式, 不会移交给css-module处理
+    - 局部样式
+        -将样式文件放在文件同文件夹下, 在需要使用的组件内导入css文件, 组件内使用的className需要使用导入css文件的对象的属性
+- 数据代理和模拟数据
+    - 代理需要配置里增加一个属性[proxy](https://umijs.org/zh-CN/config#proxy)
+    - umi约定mock中文件夹下的文件均会被作为数据模拟配置

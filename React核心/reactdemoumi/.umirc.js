@@ -23,8 +23,16 @@ export default {
     //         ]
     //     }
     // ],
-    dva: {
-        immer: false, // 不建议开启, 因为会造成自己能直接在reducers内函数写state++这样的操作
-        hmr: false
-    }
+    // dva: {
+    //     immer: false, // 不建议开启, 因为会造成自己能直接在reducers内函数写state++这样的操作
+    //     hmr: false
+    // }
+    // 代理
+    proxy: {
+        '/api': {
+          'target': 'https://open.duyiedu.com',
+          // 替换地址
+          'changeOrigin': true,
+        },
+    },
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'umi'
+import { NavLink } from 'umi'
 
 export default function Layout(props) {
     for (const url of props.route.routes) {
@@ -12,13 +12,13 @@ export default function Layout(props) {
             <div>
                 <span>导航栏</span>
                 |
-                <span><Link to={'/'}>首页</Link></span>
+                <span><NavLink exact to={'/'}>首页</NavLink></span>
                 |
-                <span><Link to={'/welcome'}>欢迎光临</Link></span>
+                <span><NavLink to={'/welcome'}>欢迎光临</NavLink></span>
                 |
-                <span><Link to={'/login'}>登录</Link></span>
+                <span><NavLink to={'/login'}>登录</NavLink></span>
                 |
-                <span><Link to={'/user'}>User</Link></span>
+                <span><NavLink to={'/user'}>User</NavLink></span>
             </div>
             {props.children}
         </div>

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@umijs/preset-react": "^1"
+    "@umijs/preset-react": "^1",
+    "mockjs": "^1.1.0"
   }
 }

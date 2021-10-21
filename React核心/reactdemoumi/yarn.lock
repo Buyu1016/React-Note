@@ -1755,6 +1755,13 @@
   "resolved" "https://registry.npm.taobao.org/binary-extensions/download/binary-extensions-2.2.0.tgz?cache=0&sync_timestamp=1610299322955&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbinary-extensions%2Fdownload%2Fbinary-extensions-2.2.0.tgz"
   "version" "2.2.0"
 
+"bindings@^1.5.0":
+  "integrity" "sha1-EDU8npRTNLwFEabZCzj7x8nFBN8="
+  "resolved" "https://registry.npm.taobao.org/bindings/download/bindings-1.5.0.tgz"
+  "version" "1.5.0"
+  dependencies:
+    "file-uri-to-path" "1.0.0"
+
 "bn.js@^4.0.0":
   "integrity" "sha1-d1s/J477uXGO7HNh9IP7Nvu/6og="
   "resolved" "https://registry.npm.taobao.org/bn.js/download/bn.js-4.12.0.tgz"
@@ -2981,6 +2988,11 @@
     "setimmediate" "^1.0.5"
     "ua-parser-js" "^0.7.18"
 
+"file-uri-to-path@1.0.0":
+  "integrity" "sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90="
+  "resolved" "https://registry.npm.taobao.org/file-uri-to-path/download/file-uri-to-path-1.0.0.tgz"
+  "version" "1.0.0"
+
 "fill-range@^4.0.0":
   "integrity" "sha1-1USBHUKPmOsGpj3EAtJAPDKMOPc="
   "resolved" "https://registry.npm.taobao.org/fill-range/download/fill-range-4.0.0.tgz"
@@ -3070,7 +3082,15 @@
   "resolved" "https://registry.npm.taobao.org/fs.realpath/download/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"fsevents@^1.2.7", "fsevents@^2.1.2", "fsevents@~2.3.1":
+"fsevents@^1.2.7":
+  "integrity" "sha1-8yXLBFVZJCi88Rs4M3DvcOO/zDg="
+  "resolved" "https://registry.npm.taobao.org/fsevents/download/fsevents-1.2.13.tgz?cache=0&sync_timestamp=1612536422255&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffsevents%2Fdownload%2Ffsevents-1.2.13.tgz"
+  "version" "1.2.13"
+  dependencies:
+    "bindings" "^1.5.0"
+    "nan" "^2.12.1"
+
+"fsevents@^2.1.2", "fsevents@~2.3.1":
   "integrity" "sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro="
   "resolved" "https://registry.npm.taobao.org/fsevents/download/fsevents-2.3.2.tgz?cache=0&sync_timestamp=1612536422255&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffsevents%2Fdownload%2Ffsevents-2.3.2.tgz"
   "version" "2.3.2"
@@ -4810,6 +4830,11 @@
   "integrity" "sha1-0J0fNXtEP0kzgqjrPM0YOHKuYAk="
   "resolved" "https://registry.npmmirror.com/ms/download/ms-2.1.2.tgz"
   "version" "2.1.2"
+
+"nan@^2.12.1":
+  "integrity" "sha1-PzSkc/8Y4VwbVia2KQO1rW5mX+4="
+  "resolved" "https://registry.nlark.com/nan/download/nan-2.15.0.tgz"
+  "version" "2.15.0"
 
 "nanomatch@^1.2.9":
   "integrity" "sha1-uHqKpPwN6P5r6IiVs4mD/yZb0Rk="

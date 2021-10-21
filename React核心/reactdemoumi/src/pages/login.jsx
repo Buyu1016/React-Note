@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { connect } from 'umi'
+import style from './login.css'
+import globalStyle from '@/assets/css/global.css'
 
 function Login(props) {
-    console.log(props.news)
     const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     return (
-        <div>
-            <label>账号:<input type="text" value={userName} onChange={e => setUserName(e.target.value)}/></label>
+        <div className={style['sign-container']}>
+            <label className={style['user-name']}>账号:<input type="text" value={userName} onChange={e => setUserName(e.target.value)}/></label>
             <label>密码:<input type="password" value={password} onChange={e => setPassword(e.target.value)}/></label>
             <button
+                className={globalStyle['button-style']}
                 onClick={() => {
                     props.onAsyncSignIn({
                         name: userName,
